@@ -1,5 +1,9 @@
 const graphql = require('graphql')
-const _ = require('lodash')
+let fetch;
+import('node-fetch').then(module => {
+ fetch = module.default;
+});
+
 const{
     GraphQLObjectType,
     GraphQLString,
@@ -16,10 +20,6 @@ const UserType = new GraphQLObjectType({
     }
 })
 
-const users = [
-    {id: '23', firstName: 'Bill', age: 20},
-    {id: '47', firstName: 'Samantha', age: 21}
-]
 
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
@@ -28,7 +28,12 @@ const RootQuery = new GraphQLObjectType({
             type: UserType,
             args: { id: {type: GraphQLString}},
             resolve(parentValue, args) {
-                return _.find(users, {id: args.id})
+                return fetch(`http://localhost:3000/users/${args.id}`)
+                .then(resp => resp.json())
+                .then(user => {
+                    console.log(user)
+                    return user
+                })
             }
         }
     }

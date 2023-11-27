@@ -1,0 +1,16 @@
+.Ds_store
+
+node_modules/
+package-lock.json
+
+*.text
+*.log
+
+.env
+
+.sass-cache
+
+bin/
+out/
+target/
+
